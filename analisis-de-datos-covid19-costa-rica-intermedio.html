@@ -1544,14 +1544,81 @@ Rica <a href="https://geovision.uned.ac.cr/oges/">https://geovision.uned.ac.cr/o
 <div id="entradas" class="section level2">
 <h2>Entradas</h2>
 <pre class="r"><code>covid &lt;- read.csv(file = &quot;05_24_22_CSV_GENERAL.csv&quot;, sep = &quot;;&quot;)</code></pre>
+</div>
+<div id="librerias" class="section level2">
+<h2>Librerias</h2>
+<pre class="r"><code>library(ggplot2)
+library(plotly)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;plotly&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:ggplot2&#39;:
+## 
+##     last_plot</code></pre>
+<pre><code>## The following object is masked from &#39;package:stats&#39;:
+## 
+##     filter</code></pre>
+<pre><code>## The following object is masked from &#39;package:graphics&#39;:
+## 
+##     layout</code></pre>
+<pre class="r"><code>library(readr)
+library(dplyr)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;dplyr&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<pre class="r"><code>library(DT)</code></pre>
 <div id="datos-generales-de-casos" class="section level3">
 <h3>Datos generales de casos</h3>
-<p>Datos de covid- 19 a nivel nacional de Costa Rica Datos de covi-19 a
-nivle cantonal de Costa Rica</p>
+<p>Datos de covid- 19 a nivel nacional de Costa Rica</p>
+<pre class="r"><code>covid_nacional &lt;-
+  read_delim(
+    file = &quot;05_24_22_CSV_GENERAL.csv&quot;,
+     delim = &quot;;&quot;,
+    col_select = c(&quot;FECHA&quot;, &quot;positivos&quot;, &quot;fallecidos&quot;, &quot;RECUPERADOS&quot;, &quot;activos&quot;)
+  )</code></pre>
+<pre><code>## Rows: 810 Columns: 5
+## -- Column specification --------------------------------------------------------
+## Delimiter: &quot;;&quot;
+## chr (1): FECHA
+## dbl (4): positivos, fallecidos, RECUPERADOS, activos
+## 
+## i Use `spec()` to retrieve the full column specification for this data.
+## i Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>covid_nacional &lt;-
+  covid_nacional %&gt;%
+  select(fecha = FECHA,
+         positivos,
+         fallecidos,
+         recuperados = RECUPERADOS,
+         activos) %&gt;%
+  mutate(fecha = as.Date(fecha, format = &quot;%d/%m/%Y&quot;))</code></pre>
+<p>Datos de covi-19 a nivel cantonal de Costa Rica</p>
+<pre class="r"><code>covid_cantonal_positivos &lt;-
+  read_delim(
+    file = &quot;05_24_22_CSV_POSITIVOS.csv&quot;,
+    delim = &quot;;&quot;,
+    locale = locale(encoding = &quot;WINDOWS-1252&quot;),  
+    col_select = c(&quot;canton&quot;, &quot;24/05/2022&quot;)
+    )</code></pre>
+<pre><code>## Rows: 84 Columns: 2
+## -- Column specification --------------------------------------------------------
+## Delimiter: &quot;;&quot;
+## chr (1): canton
+## dbl (1): 24/05/2022
+## 
+## i Use `spec()` to retrieve the full column specification for this data.
+## i Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>covid_cantonal_positivos &lt;-
+  covid_cantonal_positivos %&gt;%
+  rename(positivos = &#39;24/05/2022&#39;)</code></pre>
 </div>
 </div>
-<div id="porcesamiento" class="section level2">
-<h2>Porcesamiento</h2>
+<div id="procesamiento" class="section level2">
+<h2>Procesamiento</h2>
 </div>
 <div id="opciones-generales" class="section level2">
 <h2>Opciones Generales</h2>
@@ -1570,6 +1637,25 @@ nivle cantonal de Costa Rica</p>
 </div>
 <div id="gráfico-de-lineas" class="section level4">
 <h4>Gráfico de Lineas</h4>
+<pre class="r"><code>ggplot2_covid_nacional_linea &lt;-
+  covid_nacional %&gt;%
+  ggplot(aes(x = fecha, y = value, color = variable)) +
+  ggtitle(&quot;Casos acumulados de covid-19 en Costa Rica&quot;) +
+  xlab(&quot;Fecha&quot;) +
+  ylab(&quot;Casos&quot;) +
+  geom_line(aes(y = positivos, color = &quot;Positivos&quot;)) +
+  geom_line(aes(y = recuperados, color = &quot;Recuperados&quot;)) +
+  geom_line(aes(y = activos, color = &quot;Activos&quot;)) +
+  geom_line(aes(y = fallecidos, color = &quot;Fallecidos&quot;)) +
+  scale_colour_manual(
+    &quot;&quot;,
+    values = c(
+      &quot;Positivos&quot; = &quot;blue&quot;,
+      &quot;Recuperados&quot; = &quot;green&quot;,
+      &quot;Activos&quot; = &quot;red&quot;,
+      &quot;Fallecidos&quot; = &quot;black&quot;
+    )
+  )</code></pre>
 </div>
 </div>
 <div id="casos-a-nivel-nacional" class="section level3">
