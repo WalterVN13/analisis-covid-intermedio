@@ -1,0 +1,37 @@
+---
+title: "Análisis de datos Covid-19 Costa Rica"
+author: "Walter Varela Navarro"
+date: '2022-05-25'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+## Presentanción
+
+## Entradas
+
+### Datos generales de casos
+
+## Porcesamiento
+
+## Opciones Generales
+
+## Curación de datos
+
+## Salidas
+
+### Casos acumulados a nivel nacional
+
+#### Tabla
+
+#### Gráfico de Lineas
+
+### Casos a nivel nacional
+
+#### Positivos
+
+##### Tablas
+
+##### Gráfico de barras
